@@ -1,0 +1,51 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: auth-demo
+
+  datasource:
+    # 演示默认使用内存数据库 H2，启动即用
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:auth_demo;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
+    username: sa
+    password: ""
+    # 生产/实际项目切换 MySQL 时，把上面 3 行替换为：
+    # driver-class-name: com.mysql.cj.jdbc.Driver
+    # url: jdbc:mysql://127.0.0.1:3306/auth_demo?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    # username: root
+    # password: root
+    # 同时把 pom.xml 中的 h2 依赖替换为 mysql-connector-j
+
+  sql:
+    init:
+      # 每次启动执行 classpath: schema.sql
+      mode: always
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# JWT 配置
+jwt:
+  # HS256 密钥，长度必须 >= 32 字节，生产环境务必替换并放到配置中心
+  secret: auth-demo-secret-key-please-change-in-production-123456
+  # token 有效期（秒）
+  expiration: 7200
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+logging:
+  level:
+    com.example.demo1: debug
